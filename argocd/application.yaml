@@ -2,33 +2,33 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: civil-engineer-web
-  namespace: argocd               # ArgoCD always lives in the argocd namespace
+  namespace: argocd
   labels:
     app: civil-engineer-web
   finalizers:
-    - resources-finalizer.argocd.argoproj.io   # cascade-delete on app removal
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
 
-  # ── Source: your GitHub repo ──────────────────────────────────────────────
+  # ── Source ────────────────────────────────────────────────────────────────
   source:
-    repoURL: https://github.com/matucr/civil-engineer-web.git  # ⚠️  Replace
-    targetRevision: main          # branch / tag / commit SHA
-    path: k8s                     # folder inside the repo with manifests
+    repoURL: https://github.com/MAtucR/civil-engineer-web.git
+    targetRevision: main
+    path: k8s
 
   # ── Destination: local k3s cluster ───────────────────────────────────────
   destination:
-    server: https://kubernetes.default.svc   # in-cluster
+    server: https://kubernetes.default.svc
     namespace: civil-web
 
   # ── Sync policy: GitOps auto-sync ────────────────────────────────────────
   syncPolicy:
     automated:
-      prune: true                 # delete resources removed from git
-      selfHeal: true              # revert manual cluster changes
+      prune: true
+      selfHeal: true
       allowEmpty: false
     syncOptions:
-      - CreateNamespace=true      # auto-create namespace if missing
+      - CreateNamespace=true
       - PrunePropagationPolicy=foreground
       - PruneLast=true
     retry:
@@ -38,5 +38,4 @@ spec:
         factor: 2
         maxDuration: 3m
 
-  # ── Health / diff settings ────────────────────────────────────────────────
   revisionHistoryLimit: 5
