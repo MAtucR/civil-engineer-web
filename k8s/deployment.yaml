@@ -34,6 +34,8 @@ spec:
           # e.g.  ghcr.io/<your-user>/civil-engineer-web:latest
           image: ghcr.io/matucr/civil-engineer-web:latest
           imagePullPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-secret
 
           ports:
             - containerPort: 80
