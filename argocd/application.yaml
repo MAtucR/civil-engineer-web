@@ -12,7 +12,7 @@ spec:
 
   # ── Source: your GitHub repo ──────────────────────────────────────────────
   source:
-    repoURL: https://github.com/YOUR_GITHUB_USER/YOUR_REPO_NAME.git  # ⚠️  Replace
+    repoURL: https://github.com/matucr/civil-engineer-web.git  # ⚠️  Replace
     targetRevision: main          # branch / tag / commit SHA
     path: k8s                     # folder inside the repo with manifests
 
