@@ -22,20 +22,10 @@ spec:
         app: civil-engineer-web
         version: "1.0.0"
     spec:
-      # ── Security context ──────────────────────────────────────────────────
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 101            # nginx user in alpine image
-        fsGroup: 101
-
       containers:
         - name: civil-engineer-web
-          # ⚠️  Replace with your Docker Hub / registry image
-          # e.g.  ghcr.io/<your-user>/civil-engineer-web:latest
           image: ghcr.io/matucr/civil-engineer-web:latest
           imagePullPolicy: Always
-      imagePullSecrets:
-        - name: ghcr-secret
 
           ports:
             - containerPort: 80
@@ -67,9 +57,11 @@ spec:
             periodSeconds: 10
 
           # ── Security ──────────────────────────────────────────────────────
+          # nginx:alpine master process needs root to bind port 80.
+          # Worker processes drop to the 'nginx' user (UID 101) automatically.
+          # Use nginxinc/nginx-unprivileged if you need a fully rootless setup.
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false   # nginx writes tmp files
             capabilities:
               drop: ["ALL"]
-              add: ["NET_BIND_SERVICE"]
+              add: ["NET_BIND_SERVICE", "CHOWN", "SETUID", "SETGID"]
